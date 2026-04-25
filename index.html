@@ -3,31 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Uzum WMS — Mini Assembly</title>
+  <title>Uzum WMS — Волновой отбор</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{
-      --bg:var(--tg-theme-bg-color,#f6f7fb);--card:var(--tg-theme-secondary-bg-color,#fff);--text:var(--tg-theme-text-color,#111827);
-      --hint:var(--tg-theme-hint-color,#6b7280);--btn:var(--tg-theme-button-color,#7000ff);--btnText:var(--tg-theme-button-text-color,#fff);
-      --green:#16a34a;--red:#dc2626;--orange:#f59e0b;--blue:#2563eb;--line:rgba(0,0,0,.09);--radius:16px;
-      --safeTop:env(safe-area-inset-top);--safeBottom:env(safe-area-inset-bottom);
+      --bg:var(--tg-theme-bg-color,#f5f6fb);--card:var(--tg-theme-secondary-bg-color,#fff);--text:var(--tg-theme-text-color,#111827);--hint:var(--tg-theme-hint-color,#64748b);
+      --btn:var(--tg-theme-button-color,#7000ff);--btnText:var(--tg-theme-button-text-color,#fff);--line:rgba(15,23,42,.10);--green:#16a34a;--red:#dc2626;--orange:#f59e0b;--blue:#2563eb;--dark:#111827;
+      --safeTop:env(safe-area-inset-top);--safeBottom:env(safe-area-inset-bottom);--radius:18px;
     }
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:calc(16px + var(--safeBottom))}
-    .top{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#111827,#28114d);color:#fff;padding:calc(14px + var(--safeTop)) 16px 14px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;box-shadow:0 10px 25px rgba(15,23,42,.18)}
-    .topRow{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.title{font-weight:900;font-size:18px}.sub{font-size:12px;color:#d1d5db;margin-top:4px}.pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;white-space:nowrap}
-    .wrap{padding:14px 14px 0}.screen{display:none}.screen.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
-    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}.muted{color:var(--hint);font-size:13px}.btn{border:0;border-radius:13px;background:var(--btn);color:var(--btnText);font-weight:800;font-size:15px;min-height:46px;padding:12px 14px;cursor:pointer}.btn:disabled{opacity:.5}.btn.secondary{background:var(--card);color:var(--text);border:1.5px solid var(--line)}.btn.green{background:var(--green);color:#fff}.btn.red{background:var(--red);color:#fff}.btn.full{width:100%}.btn.small{min-height:34px;padding:7px 10px;border-radius:10px;font-size:12px}
-    input{width:100%;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:13px;padding:13px;font-size:17px;outline:none}input:focus{border-color:var(--btn)}
-    .setup{max-width:480px;margin:12vh auto}.field{margin-top:12px}.field label{display:block;color:var(--hint);font-size:12px;font-weight:800;text-transform:uppercase;margin-bottom:6px}.listHead{display:flex;gap:8px;margin-bottom:10px}.listHead input{flex:1}.order{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:10px}.order:active{transform:scale(.99)}.orderId{font-size:19px;font-weight:950}.badge{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px}.new{background:#dbeafe;color:#1e40af}.asm{background:#fef3c7;color:#92400e}.progress{height:8px;background:rgba(148,163,184,.25);border-radius:99px;overflow:hidden;margin-top:10px}.fill{height:100%;background:var(--btn);border-radius:99px}.fill.done{background:var(--green)}
-    .orderHero{background:linear-gradient(135deg,var(--btn),#3b0764);color:#fff;border-radius:18px;padding:16px;margin-bottom:12px}.bigRoute{font-size:34px;font-weight:950;line-height:1}.heroGrid{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.heroMeta{font-size:13px;color:rgba(255,255,255,.82);margin-top:6px}.scanBox{background:#0f172a;color:#fff;border-radius:18px;padding:14px;margin-bottom:12px}.scanRow{display:flex;gap:8px}.scanRow input{font-size:21px;text-align:center;font-weight:900;background:#fff;color:#111}.scanMsg{min-height:22px;margin-top:9px;font-size:13px;font-weight:800}.ok{color:#22c55e}.err{color:#ef4444}.info{color:#60a5fa}
-    .item{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px;margin-bottom:9px}.item.done{background:#ecfdf5;border-color:#86efac}.itemTop{display:flex;justify-content:space-between;gap:10px}.itemName{font-weight:850;font-size:14px}.sku{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:rgba(148,163,184,.18);border-radius:7px;padding:3px 7px;display:inline-block;margin-top:5px}.qty{font-size:22px;font-weight:950;white-space:nowrap}.cells{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.cell{font-size:11px;border-radius:8px;padding:4px 7px;background:#eff6ff;color:#1d4ed8;font-weight:800}.empty{background:#fee2e2;color:#991b1b}.emptyState{text-align:center;color:var(--hint);padding:32px 14px}.toast{position:fixed;left:12px;right:12px;bottom:calc(14px + var(--safeBottom));z-index:20;display:flex;flex-direction:column;gap:8px}.toast div{background:#111827;color:#fff;border-radius:13px;padding:12px 14px;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.22)}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:calc(18px + var(--safeBottom))}
+    .top{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#111827,#35125f);color:#fff;padding:calc(14px + var(--safeTop)) 14px 14px;border-bottom-left-radius:22px;border-bottom-right-radius:22px;box-shadow:0 12px 28px rgba(15,23,42,.20)}
+    .topRow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.title{font-size:18px;font-weight:950}.sub{font-size:12px;color:#d1d5db;margin-top:3px;line-height:1.35}.pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;white-space:nowrap}.wrap{padding:14px}.screen{display:none}.screen.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(15,23,42,.04)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}.muted{color:var(--hint);font-size:13px;line-height:1.35}.label{display:block;color:var(--hint);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.35px;margin:12px 0 6px}
+    input,select{width:100%;border:2px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:13px;font-size:17px;outline:none}input:focus,select:focus{border-color:var(--btn)}
+    .btn{border:0;border-radius:14px;background:var(--btn);color:var(--btnText);font-weight:900;font-size:15px;min-height:46px;padding:12px 14px;cursor:pointer}.btn:disabled{opacity:.5;cursor:default}.btn.secondary{background:var(--card);color:var(--text);border:1.5px solid var(--line)}.btn.green{background:var(--green);color:#fff}.btn.red{background:var(--red);color:#fff}.btn.full{width:100%}.btn.small{min-height:34px;padding:7px 10px;border-radius:10px;font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.setup{max-width:520px;margin:8vh auto 0}
+    .hero{background:linear-gradient(135deg,var(--btn),#3b0764);color:#fff;border-radius:22px;padding:16px;margin-bottom:12px}.heroTop{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.cellBig{font-size:44px;font-weight:950;line-height:.98;letter-spacing:-1px}.skuBig{font-size:20px;font-weight:950;margin-top:8px;word-break:break-all}.heroMeta{font-size:13px;color:rgba(255,255,255,.82);margin-top:6px}.qtyBox{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:10px;text-align:center;min-width:92px}.qtyBox .n{font-size:34px;font-weight:950}.qtyBox .t{font-size:11px;color:rgba(255,255,255,.75);font-weight:900;text-transform:uppercase}.progress{height:10px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden;margin-top:13px}.fill{height:100%;width:0%;background:#22c55e;border-radius:999px;transition:.18s ease}.scan{background:#0f172a;color:#fff;border-radius:20px;padding:14px;margin-bottom:12px}.scan label{display:block;font-size:12px;font-weight:950;color:#cbd5e1;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}.scanRow{display:flex;gap:8px}.scanRow input{background:#fff;color:#111;text-align:center;font-size:22px;font-weight:950}.scanMsg{min-height:22px;margin-top:9px;font-size:13px;font-weight:850}.ok{color:#22c55e}.err{color:#ef4444}.info{color:#60a5fa}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.stat{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px;text-align:center}.stat .v{font-size:22px;font-weight:950}.stat .l{font-size:11px;color:var(--hint);font-weight:850;margin-top:2px}.task{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px;margin-bottom:9px}.task.current{border-color:var(--btn);background:#f1e9ff}.task.done{background:#ecfdf5;border-color:#86efac}.taskTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.taskCell{font-size:18px;font-weight:950;color:var(--btn)}.taskSku{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:rgba(148,163,184,.18);border-radius:8px;padding:4px 7px;display:inline-block;margin-top:5px}.taskName{font-size:13px;font-weight:800;margin-top:6px;line-height:1.25}.taskQty{font-size:24px;font-weight:950;white-space:nowrap}.badge{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;background:#eff6ff;color:#1d4ed8}.badge.green{background:#dcfce7;color:#166534}.badge.red{background:#fee2e2;color:#991b1b}.tabs{display:flex;gap:8px;margin-bottom:10px}.tab{flex:1;background:var(--card);border:1.5px solid var(--line);color:var(--text);border-radius:12px;min-height:38px;font-weight:900}.tab.active{background:var(--btn);color:#fff;border-color:var(--btn)}.empty{text-align:center;color:var(--hint);padding:28px 12px}.toast{position:fixed;left:12px;right:12px;bottom:calc(14px + var(--safeBottom));z-index:50;display:flex;flex-direction:column;gap:8px}.toast div{background:#111827;color:#fff;border-radius:14px;padding:12px 14px;font-weight:850;box-shadow:0 12px 30px rgba(0,0,0,.22)}
+    .order{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:8px}.orderId{font-weight:950}.orderMeta{font-size:12px;color:var(--hint);margin-top:3px}.routeList{max-height:44vh;overflow:auto;padding-bottom:8px}
   </style>
 </head>
 <body>
   <div class="top">
     <div class="topRow">
-      <div><div class="title">🏭 Сборка</div><div class="sub" id="who">Mini App · резервирование товара</div></div>
+      <div><div class="title">🧭 Волновой отбор</div><div class="sub" id="who">Одна волна · маршрут по ячейкам</div></div>
       <div class="pill" id="stationPill">—</div>
     </div>
   </div>
@@ -35,114 +35,129 @@
   <div class="wrap">
     <section id="setup" class="screen setup active">
       <div class="card">
-        <h2 style="font-size:20px;margin-bottom:6px">Первый вход</h2>
-        <p class="muted">Укажи станцию сборки. Оператор берётся из Telegram, либо можно ввести вручную.</p>
-        <div class="field"><label>Оператор</label><input id="operatorInput" placeholder="Имя / Telegram ID"></div>
-        <div class="field"><label>Станция</label><input id="stationInput" value="PICK-01"></div>
-        <button class="btn full" id="saveSetup" style="margin-top:12px">Начать сборку</button>
+        <h2 style="font-size:22px;margin-bottom:6px">Настройка волны</h2>
+        <p class="muted">После входа приложение автоматически выдаст маршрут обхода по ячейкам для отбора товаров сразу по нескольким заказам.</p>
+        <label class="label">Оператор</label><input id="operatorInput" placeholder="Имя / Telegram ID">
+        <div class="grid2">
+          <div><label class="label">Станция</label><input id="stationInput" value="PICK-01"></div>
+          <div><label class="label">Заказов в волне</label><input id="waveSizeInput" type="number" min="1" max="100" value="50"></div>
+        </div>
+        <div class="grid2">
+          <div><label class="label">Маршрут, опц.</label><input id="routeInput" inputmode="numeric" placeholder="Напр. 12"></div>
+          <div><label class="label">ПВЗ, опц.</label><input id="pvzInput" placeholder="Код ПВЗ"></div>
+        </div>
+        <button class="btn full" id="startBtn" style="margin-top:14px">Открыть задание</button>
       </div>
     </section>
 
-    <section id="ordersScreen" class="screen">
-      <div class="listHead">
-        <input id="search" placeholder="Поиск заказа / ПВЗ / маршрут">
-        <button class="btn secondary small" id="refreshBtn">↻</button>
-      </div>
-      <div id="ordersList"></div>
-    </section>
-
-    <section id="pickScreen" class="screen">
-      <div class="orderHero">
-        <div class="heroGrid"><div><div class="muted" style="color:rgba(255,255,255,.72)">Заказ</div><div id="pickOrderId" style="font-size:24px;font-weight:950">—</div><div class="heroMeta" id="pickMeta">—</div></div><div class="bigRoute" id="pickRoute">—</div></div>
-        <div class="progress"><div class="fill" id="pickFill" style="width:0%"></div></div>
-      </div>
-      <div class="scanBox">
-        <div style="font-size:12px;font-weight:900;color:#cbd5e1;text-transform:uppercase;margin-bottom:8px">Скан SKU</div>
-        <div class="scanRow"><input id="skuInput" placeholder="SKU"><button class="btn green" id="scanBtn">OK</button><button class="btn secondary" id="camBtn">📷</button></div>
-        <div id="scanMsg" class="scanMsg"></div>
-      </div>
-      <div class="row" style="margin-bottom:10px">
-        <button class="btn secondary" id="backBtn">← Список</button>
-        <button class="btn red" id="cancelBtn">Отмена</button>
-      </div>
-      <button class="btn green full" id="finishBtn" disabled>✅ Завершить сборку</button>
-      <h3 style="font-size:15px;margin:16px 0 10px">Позиции</h3>
-      <div id="itemsList"></div>
+    <section id="waveScreen" class="screen">
+      <div id="waveContent"><div class="card empty">Загрузка волны...</div></div>
     </section>
   </div>
   <div class="toast" id="toast"></div>
 
 <script>
-const CONFIG = {
-  S_URL: "https://ysvogudznyuszssdriih.supabase.co",
-  S_KEY: "sb_publishable_kU91fqnkt80hbLcVEms6oA_eXKVzY2A"
+'use strict';
+const CONFIG={
+  S_URL:'https://ysvogudznyuszssdriih.supabase.co',
+  S_KEY:'sb_publishable_kU91fqnkt80hbLcVEms6oA_eXKVzY2A'
 };
-const tg = window.Telegram?.WebApp;
-try { tg?.ready(); tg?.expand(); tg?.disableVerticalSwipes?.(); } catch {}
-const db = supabase.createClient(CONFIG.S_URL, CONFIG.S_KEY);
-let operatorId = '';
-let stationId = '';
-let orders = [];
-let currentOrderId = null;
-let currentOrderData = null;
-let busy = false;
-const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pct = (a,b) => b ? Math.min(100, Math.round(Number(a||0)/Number(b||0)*100)) : 0;
-function toast(msg){ const d=document.createElement('div'); d.textContent=msg; $('toast').appendChild(d); setTimeout(()=>d.remove(),2800); }
-function h(type){ try{ tg?.HapticFeedback?.notificationOccurred?.(type); }catch{} }
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); $(id).classList.add('active'); if(id==='pickScreen') setTimeout(()=>$('skuInput')?.focus(),80); }
-function setBusy(v){ busy=v; document.querySelectorAll('button').forEach(b=>b.disabled = v || b.dataset.locked === '1'); }
-async function rpc(name,args){ const {data,error}=await db.rpc(name,args||{}); if(error) throw error; if(data?.ok===false) throw new Error(data.error||data.message||'Ошибка'); return data; }
+const tg=window.Telegram?.WebApp; try{tg?.ready();tg?.expand();tg?.disableVerticalSwipes?.();}catch{}
+const db=supabase.createClient(CONFIG.S_URL,CONFIG.S_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct=(a,b)=>b?Math.min(100,Math.round(Number(a||0)/Number(b||0)*100)):0;
+let state={operatorId:'',stationId:'',wave:null,progress:null,currentTask:null,tasks:[],orders:[],busy:false,tab:'route'};
+function toast(msg){const d=document.createElement('div');d.textContent=msg;$('toast').appendChild(d);setTimeout(()=>d.remove(),3000)}
+function h(type){try{tg?.HapticFeedback?.notificationOccurred?.(type)}catch{}}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
+function setBusy(v){state.busy=v;document.querySelectorAll('button').forEach(b=>b.disabled=v)}
+async function rpc(name,args){const {data,error}=await db.rpc(name,args||{});if(error)throw error;if(data?.ok===false)throw new Error(data.error||data.message||'Ошибка');return data}
+function getOperatorFromTg(){const u=tg?.initDataUnsafe?.user;return u?`tg:${u.id}:${u.first_name||''}`:''}
 function init(){
-  const tgUser = tg?.initDataUnsafe?.user;
-  const savedStation = localStorage.getItem('assembly_station') || 'PICK-01';
-  const savedOperator = localStorage.getItem('assembly_operator') || (tgUser ? `tg:${tgUser.id}:${tgUser.first_name||''}` : '');
-  $('operatorInput').value = savedOperator; $('stationInput').value = savedStation;
-  if(savedOperator && savedStation){ operatorId=savedOperator; stationId=savedStation; start(); }
+  $('operatorInput').value=localStorage.getItem('wave_operator')||getOperatorFromTg();
+  $('stationInput').value=localStorage.getItem('wave_station')||'PICK-01';
+  $('waveSizeInput').value=localStorage.getItem('wave_size')||'50';
+  $('routeInput').value=localStorage.getItem('wave_route')||'';
+  $('pvzInput').value=localStorage.getItem('wave_pvz')||'';
+  if($('operatorInput').value && $('stationInput').value){start();}
 }
-function start(){
-  operatorId = $('operatorInput').value.trim() || 'operator'; stationId = $('stationInput').value.trim() || 'PICK-01';
-  localStorage.setItem('assembly_operator', operatorId); localStorage.setItem('assembly_station', stationId);
-  $('who').textContent = operatorId; $('stationPill').textContent = stationId; show('ordersScreen'); loadOrders();
+function saveSetup(){
+  state.operatorId=$('operatorInput').value.trim()||'operator';
+  state.stationId=$('stationInput').value.trim()||'PICK-01';
+  localStorage.setItem('wave_operator',state.operatorId);localStorage.setItem('wave_station',state.stationId);
+  localStorage.setItem('wave_size',$('waveSizeInput').value||'50');localStorage.setItem('wave_route',$('routeInput').value.trim());localStorage.setItem('wave_pvz',$('pvzInput').value.trim());
+  $('who').textContent=state.operatorId;$('stationPill').textContent=state.stationId;
 }
-async function loadOrders(){
-  $('ordersList').innerHTML='<div class="emptyState">Загрузка...</div>';
-  try{ const data=await rpc('get_assembly_orders',{p_limit:300}); orders=data.orders||[]; renderOrders(); }
-  catch(e){ $('ordersList').innerHTML=`<div class="card err">${esc(e.message)}</div>`; }
+async function start(){saveSetup();show('waveScreen');await loadOrCreateWave();}
+async function loadOrCreateWave(){
+  setBusy(true);$('waveContent').innerHTML='<div class="card empty">⏳ Формирую маршрут отбора...</div>';
+  try{
+    let data=await rpc('get_active_picking_wave',{p_operator_id:state.operatorId,p_station_id:state.stationId});
+    if(!data.has_wave){
+      const route=$('routeInput').value.trim();const pvz=$('pvzInput').value.trim();
+      data=await rpc('create_picking_wave',{p_operator_id:state.operatorId,p_station_id:state.stationId,p_max_orders:Number($('waveSizeInput').value||50),p_route_number:route?Number(route):null,p_pvz_code:pvz||null});
+    }
+    applyWave(data);render();
+  }catch(e){$('waveContent').innerHTML=`<div class="card empty">❌ ${esc(e.message)}<br><br><button class="btn secondary" onclick="show('setup')">Настройки</button></div>`;h('error')}
+  finally{setBusy(false)}
 }
-function renderOrders(){
-  const q=$('search').value.toLowerCase().trim(); let list=orders;
-  if(q) list=list.filter(o=>[o.external_id,o.pvz_code,o.route_number,o.status].join(' ').toLowerCase().includes(q));
-  if(!list.length){ $('ordersList').innerHTML='<div class="emptyState">Нет заказов на сборку</div>'; return; }
-  $('ordersList').innerHTML=list.map(o=>{ const done=Number(o.picked_qty||0), total=Number(o.total_qty||0), p=pct(done,total); return `<div class="order" data-id="${esc(o.id)}">
-    <div class="row"><div><div class="orderId">#${esc(o.external_id)}</div><div class="muted">ПВЗ ${esc(o.pvz_code||'—')} · маршрут ${esc(o.route_number||'—')} · ${done}/${total}</div></div><span class="badge ${o.status==='ASSEMBLING'?'asm':'new'}">${esc(o.status)}</span></div>
-    <div class="progress"><div class="fill ${p===100?'done':''}" style="width:${p}%"></div></div>
-  </div>`}).join('');
-  document.querySelectorAll('.order').forEach(el=>el.onclick=()=>selectOrder(el.dataset.id));
+async function refreshWave(){if(!state.wave?.id)return loadOrCreateWave();setBusy(true);try{const data=await rpc('get_picking_wave_details',{p_wave_id:state.wave.id});applyWave(data);render();}catch(e){toast(e.message);h('error')}finally{setBusy(false)}}
+function applyWave(data){state.wave=data.wave||null;state.progress=data.progress||{};state.currentTask=(data.current_task&&Object.keys(data.current_task).length)?data.current_task:null;state.tasks=data.tasks||[];state.orders=data.orders||[];}
+function render(){
+  if(!state.wave){$('waveContent').innerHTML='<div class="card empty">Нет активной волны</div>';return}
+  const p=state.progress||{};const percent=pct(p.qty_picked,p.qty_plan);const t=state.currentTask;
+  if(state.wave.status!=='IN_PROGRESS'){
+    $('waveContent').innerHTML=`<div class="card empty"><div style="font-size:42px;margin-bottom:8px">✅</div><b>Волна ${esc(state.wave.wave_no)} завершена</b><p style="margin-top:8px">${esc(p.qty_picked)}/${esc(p.qty_plan)} шт.</p><button class="btn full" style="margin-top:14px" onclick="newWave()">Создать новую волну</button></div>`;return;
+  }
+  const currentHtml=t?`
+    <div class="hero">
+      <div class="heroTop">
+        <div><div class="muted" style="color:rgba(255,255,255,.75)">Текущая ячейка</div><div class="cellBig">${esc(t.cell_code)}</div><div class="skuBig">${esc(t.sku)}</div><div class="heroMeta">${esc(t.item_name||'')} ${t.attr1?`· ${esc(t.attr1)}`:''} ${t.attr2?`· ${esc(t.attr2)}`:''}</div></div>
+        <div class="qtyBox"><div class="n">${esc(t.qty_remaining)}</div><div class="t">осталось</div></div>
+      </div>
+      <div class="progress"><div class="fill" style="width:${percent}%"></div></div>
+      <div class="heroMeta">Волна: ${esc(state.wave.wave_no)} · ${esc(p.qty_picked)}/${esc(p.qty_plan)} шт. · заказов ${esc(p.orders_done)}/${esc(p.orders_total)}</div>
+    </div>
+    <div class="scan"><label>Сканируйте SKU из текущей ячейки</label><div class="scanRow"><input id="skuInput" placeholder="SKU" autocomplete="off"><button class="btn green" onclick="scanSku()">OK</button></div><div id="scanMsg" class="scanMsg info">Ожидаю SKU: ${esc(t.sku)}</div></div>
+  `:`
+    <div class="hero"><div class="heroTop"><div><div class="muted" style="color:rgba(255,255,255,.75)">Маршрут завершён</div><div class="cellBig">Готово</div><div class="heroMeta">Все товары в волне отобраны. Завершите волну, чтобы перевести заказы в ASSEMBLED.</div></div><div class="qtyBox"><div class="n">${esc(p.qty_picked||0)}</div><div class="t">шт.</div></div></div><div class="progress"><div class="fill" style="width:100%"></div></div></div>`;
+  $('waveContent').innerHTML=`
+    <div class="stats"><div class="stat"><div class="v">${esc(p.orders_total||0)}</div><div class="l">заказов</div></div><div class="stat"><div class="v">${esc(p.qty_picked||0)}/${esc(p.qty_plan||0)}</div><div class="l">шт.</div></div><div class="stat"><div class="v">${percent}%</div><div class="l">прогресс</div></div></div>
+    ${currentHtml}
+    <div class="row" style="margin-bottom:12px"><button class="btn secondary" onclick="refreshWave()">↻ Обновить</button><button class="btn green" onclick="finishWave()" ${p.is_complete?'':'disabled'}>✅ Завершить волну</button></div>
+    <button class="btn red full" onclick="cancelWave()" style="margin-bottom:12px">Отменить волну и снять резерв</button>
+    <div class="tabs"><button class="tab ${state.tab==='route'?'active':''}" onclick="setTab('route')">Маршрут</button><button class="tab ${state.tab==='orders'?'active':''}" onclick="setTab('orders')">Заказы</button></div>
+    <div id="tabContent"></div>`;
+  renderTab();setTimeout(()=>$('skuInput')?.focus(),80);
 }
-async function selectOrder(id){ if(busy) return; setBusy(true); try{
-  const claim=await rpc('claim_order_for_assembly',{p_order_id:id,p_operator_id:operatorId,p_station_id:stationId,p_take_over:false});
-  currentOrderId=id; toast(`Взяли #${claim.order.external_id}`); await loadOrder(); show('pickScreen');
-}catch(e){toast(e.message); h('error');} finally{setBusy(false);} }
-async function loadOrder(){ const data=await rpc('get_order_for_assembly',{p_order_id:currentOrderId}); currentOrderData=data; renderPick(); }
-function renderPick(){
-  const o=currentOrderData.order, pr=currentOrderData.progress||{}; const done=Number(pr.picked_qty||0), total=Number(pr.total_qty||0), p=pct(done,total);
-  $('pickOrderId').textContent='#'+o.external_id; $('pickMeta').textContent=`ПВЗ ${o.pvz_code||'—'} · собрано ${done}/${total}`; $('pickRoute').textContent=o.route_number||'—'; $('pickFill').style.width=p+'%'; $('pickFill').classList.toggle('done',p===100);
-  $('finishBtn').disabled=!(p===100 && total>0); $('finishBtn').dataset.locked=$('finishBtn').disabled?'1':'0';
-  $('itemsList').innerHTML=(currentOrderData.items||[]).map(i=>{ const doneLine=Number(i.qty_picked||0)>=Number(i.qty_plan||0); const cells=i.stock_cells||[]; return `<div class="item ${doneLine?'done':''}"><div class="itemTop"><div><div class="itemName">${esc(i.item_name)}</div><span class="sku">${esc(i.sku)}</span><div class="muted">${esc(i.attr1||'')} ${esc(i.attr2||'')}</div></div><div class="qty">${esc(i.qty_picked)}/${esc(i.qty_plan)}</div></div><div class="cells">${cells.length?cells.map(c=>`<span class="cell ${Number(c.qty_available)<=0?'empty':''}">${esc(c.cell_code)} · ${esc(c.qty_available)}</span>`).join(''):'<span class="cell empty">Нет остатка</span>'}</div></div>`; }).join('');
+function setTab(tab){state.tab=tab;renderTab();document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));}
+function renderTab(){const el=$('tabContent');if(!el)return;if(state.tab==='orders'){renderOrders(el)}else{renderRoute(el)}}
+function renderRoute(el){
+  const rows=state.tasks||[]; if(!rows.length){el.innerHTML='<div class="card empty">Маршрут пуст</div>';return}
+  el.innerHTML=`<div class="routeList">${rows.map(t=>{
+    const cls=t.done?'task done':(state.currentTask&&t.sku===state.currentTask.sku&&t.cell_code===state.currentTask.cell_code?'task current':'task');
+    const badge=t.done?'<span class="badge green">готово</span>':(t.cell_code==='НЕТ ОСТАТКА'?'<span class="badge red">нет остатка</span>':`<span class="badge">${esc(t.qty_remaining)} шт.</span>`);
+    return `<div class="${cls}"><div class="taskTop"><div><div class="taskCell">${esc(t.cell_code)}</div><div class="taskSku">${esc(t.sku)}</div><div class="taskName">${esc(t.item_name||'')}</div><div class="muted" style="margin-top:5px">Заказов: ${esc(t.orders_count)} · Отбор: ${esc(t.qty_picked)}/${esc(t.qty_plan)}</div></div><div class="taskQty">${badge}</div></div></div>`
+  }).join('')}</div>`;
 }
-async function scanSku(){ if(!currentOrderId||busy) return; const sku=$('skuInput').value.trim(); const msg=$('scanMsg'); if(!sku){msg.textContent='Введите SKU';msg.className='scanMsg err';return;} setBusy(true); try{
-  const data=await rpc('scan_assembly_sku',{p_order_id:currentOrderId,p_sku:sku,p_operator_id:operatorId,p_station_id:stationId});
-  $('skuInput').value=''; msg.textContent=`✅ ${sku} · резерв ${data.cell_code}`; msg.className='scanMsg ok'; h('success'); await loadOrder();
-}catch(e){msg.textContent='❌ '+e.message; msg.className='scanMsg err'; h('error');} finally{setBusy(false); setTimeout(()=>$('skuInput').focus(),50);} }
-function scanCamera(){
-  if(tg?.showScanQrPopup){ tg.showScanQrPopup({text:'Сканируйте SKU'}, txt=>{ if(txt){ $('skuInput').value=txt.trim(); scanSku(); } return true; }); }
-  else toast('Камера Telegram недоступна. Используйте ручной ввод/сканер.');
+function renderOrders(el){
+  const rows=state.orders||[]; if(!rows.length){el.innerHTML='<div class="card empty">Заказов нет</div>';return}
+  el.innerHTML=rows.map(o=>`<div class="order"><div class="row"><div><div class="orderId">#${esc(o.external_id)}</div><div class="orderMeta">ПВЗ ${esc(o.pvz_code||'—')} · Маршрут ${esc(o.route_number||'—')} · ${esc(o.status)}</div></div><span class="badge ${o.done?'green':''}">${esc(o.qty_picked)}/${esc(o.qty_plan)}</span></div><div class="progress"><div class="fill" style="width:${pct(o.qty_picked,o.qty_plan)}%"></div></div></div>`).join('');
 }
-async function finish(){ if(!currentOrderId||busy) return; if(!confirm('Завершить сборку и списать резерв?')) return; setBusy(true); try{ const data=await rpc('finish_assembly_order',{p_order_id:currentOrderId,p_operator_id:operatorId,p_station_id:stationId}); toast(data.message||'Заказ собран'); h('success'); currentOrderId=null; await loadOrders(); show('ordersScreen'); }catch(e){toast(e.message);h('error');} finally{setBusy(false);} }
-async function cancelPick(){ if(!currentOrderId||busy) return; const reason=prompt('Причина отмены','Отмена оператора')||''; if(!confirm('Снять резерв и вернуть заказ в NEW?')) return; setBusy(true); try{ await rpc('cancel_assembly_order',{p_order_id:currentOrderId,p_operator_id:operatorId,p_station_id:stationId,p_reason:reason}); toast('Резерв снят'); h('warning'); currentOrderId=null; await loadOrders(); show('ordersScreen'); }catch(e){toast(e.message);h('error');} finally{setBusy(false);} }
-$('saveSetup').onclick=start; $('refreshBtn').onclick=loadOrders; $('search').oninput=renderOrders; $('scanBtn').onclick=scanSku; $('skuInput').addEventListener('keydown',e=>{if(e.key==='Enter')scanSku();}); $('camBtn').onclick=scanCamera; $('backBtn').onclick=()=>{show('ordersScreen');loadOrders();}; $('finishBtn').onclick=finish; $('cancelBtn').onclick=cancelPick;
+async function scanSku(){
+  if(state.busy)return; const input=$('skuInput'); const sku=(input?.value||'').trim(); if(!sku)return;
+  const expected=state.currentTask; if(!expected){toast('Волна уже отобрана');input.value='';return}
+  setBusy(true);$('scanMsg').className='scanMsg info';$('scanMsg').textContent='Проверяю...';
+  try{const data=await rpc('scan_wave_sku',{p_wave_id:state.wave.id,p_sku:sku,p_expected_cell:expected.cell_code,p_operator_id:state.operatorId,p_station_id:state.stationId});applyWave(data);toast(data.message||`Принято: ${sku}`);h('success');render();}
+  catch(e){$('scanMsg').className='scanMsg err';$('scanMsg').textContent=e.message;toast(e.message);h('error')}
+  finally{if(input)input.value='';setBusy(false);setTimeout(()=>$('skuInput')?.focus(),80)}
+}
+async function finishWave(){if(state.busy||!state.wave)return;if(!confirm('Завершить волну и списать весь резерв по заказам?'))return;setBusy(true);try{const data=await rpc('finish_picking_wave',{p_wave_id:state.wave.id,p_operator_id:state.operatorId,p_station_id:state.stationId});applyWave(data);toast(data.message||'Волна завершена');h('success');render();}catch(e){toast(e.message);h('error')}finally{setBusy(false)}}
+async function cancelWave(){if(state.busy||!state.wave)return;const reason=prompt('Причина отмены волны','Отмена оператора')||'';if(!confirm('Снять весь резерв и вернуть заказы в NEW?'))return;setBusy(true);try{const data=await rpc('cancel_picking_wave',{p_wave_id:state.wave.id,p_operator_id:state.operatorId,p_station_id:state.stationId,p_reason:reason});applyWave(data);toast(data.message||'Волна отменена');h('warning');render();}catch(e){toast(e.message);h('error')}finally{setBusy(false)}}
+async function newWave(){state.wave=null;show('setup')}
+$('startBtn').onclick=start;
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement?.id==='skuInput')scanSku()});
 init();
 </script>
 </body>
